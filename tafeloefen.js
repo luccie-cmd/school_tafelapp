@@ -1,6 +1,48 @@
 let huidigAntwoord = 0;
 let huidigGetal = 0;
 let shouldChange = true;
+let huidigeVraag = { tafel: 0, getal: 0 };
+let goedeAntwoorden = [];
+let gebruikteVragen = [];
+
+function maakVraagKey(getalA, getalB) {
+    const [kleinste, grootste] = [getalA, getalB].sort((a, b) => a - b);
+    return `${kleinste} x ${grootste}`;
+}
+
+function kiesNieuweGetal() {
+    const mogelijkeGetallen = [];
+    for (let i = 1; i <= 10; i++) {
+        if (!gebruikteVragen.includes(i)) {
+            mogelijkeGetallen.push(i);
+        }
+    }
+
+    if (mogelijkeGetallen.length === 0) {
+        gebruikteVragen = [];
+        for (let i = 1; i <= 10; i++) {
+            mogelijkeGetallen.push(i);
+        }
+    }
+
+    return mogelijkeGetallen[Math.floor(Math.random() * mogelijkeGetallen.length)];
+}
+
+function updateGoedeAntwoorden() {
+    const goedeAntwoordenLijst = document.getElementById('goedeAntwoordenLijst');
+    if (!goedeAntwoordenLijst) {
+        return;
+    }
+
+    if (goedeAntwoorden.length === 0) {
+        goedeAntwoordenLijst.innerHTML = '<li class="list-group-item text-muted">Nog geen juiste antwoorden.</li>';
+        return;
+    }
+
+    goedeAntwoordenLijst.innerHTML = goedeAntwoorden
+        .map((antwoord, index) => `<li class="list-group-item">${index + 1}. ${antwoord.label}</li>`)
+        .join('');
+}
 
 function oefenTafel() {
     const tafelInput = document.getElementById('tafelInput');
@@ -14,14 +56,23 @@ function oefenTafel() {
         tafelResultaat.innerHTML = 'Voer een tafel in.';
         return;
     }
-    let randomGetal = Math.floor(Math.random() * 10) + 1;
-    if (!shouldChange && huidigGetal !== 0) {
-        randomGetal = huidigGetal;
+
+    if (tafelInput.value !== tafelInput.getAttribute('data-tafel-actief')) {
+        gebruikteVragen = [];
+        tafelInput.setAttribute('data-tafel-actief', tafelInput.value);
     }
+
+    let randomGetal = kiesNieuweGetal();
     if (shouldChange) {
         huidigGetal = randomGetal;
         shouldChange = false;
+    } else if (gebruikteVragen.includes(huidigGetal)) {
+        randomGetal = kiesNieuweGetal();
+        huidigGetal = randomGetal;
     }
+
+    gebruikteVragen.push(randomGetal);
+    huidigeVraag = { tafel: tafel * 1, getal: randomGetal };
     let resultaat = `
     <form id="oefenForm2">
         <div class="row g-2">
@@ -59,6 +110,14 @@ function checkAntwoord() {
     }
     const num = antwoordInput.value;
     if (num == huidigAntwoord) {
+        const juisteAntwoord = `${huidigeVraag.getal} x ${huidigeVraag.tafel} = ${huidigAntwoord}`;
+        const vraagKey = maakVraagKey(huidigeVraag.getal, huidigeVraag.tafel);
+        const bestaatAl = goedeAntwoorden.some((antwoord) => antwoord.key === vraagKey);
+
+        if (!bestaatAl) {
+            goedeAntwoorden.push({ key: vraagKey, label: juisteAntwoord });
+            updateGoedeAntwoorden();
+        }
         tafelResultaat.innerHTML = '<h1>Goed gedaan!</h1>';
         shouldChange = true;
     } else {
@@ -70,5 +129,6 @@ function checkAntwoord() {
 const form = document.getElementById('oefenForm');
 form.addEventListener('submit', function (event) {
     event.preventDefault();
+    gebruikteVragen = [];
     oefenTafel();
 });
