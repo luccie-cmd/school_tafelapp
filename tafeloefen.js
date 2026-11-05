@@ -33,12 +33,10 @@ function updateGoedeAntwoorden() {
     if (!goedeAntwoordenLijst) {
         return;
     }
-
     if (goedeAntwoorden.length === 0) {
         goedeAntwoordenLijst.innerHTML = '<li class="list-group-item text-muted">Nog geen juiste antwoorden.</li>';
         return;
     }
-
     goedeAntwoordenLijst.innerHTML = goedeAntwoorden
         .map((antwoord, index) => `<li class="list-group-item">${index + 1}. ${antwoord.label}</li>`)
         .join('');
@@ -131,4 +129,7 @@ form.addEventListener('submit', function (event) {
     event.preventDefault();
     gebruikteVragen = [];
     oefenTafel();
+});
+document.addEventListener('DOMContentLoaded', function () {
+    updateGoedeAntwoorden();
 });
