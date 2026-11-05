@@ -81,7 +81,7 @@ function oefenTafel() {
                 <input type="text" class="form-control" id="antwoordInput" placeholder="Voer het antwoord in">
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-success">
                     Controleer
                 </button>
             </div>
