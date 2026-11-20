@@ -7,16 +7,9 @@ function voegDatumToe() {
     }
 }
 
-function getAppPagePath(pageName) {
-    const currentPath = window.location.pathname;
-    const alreadyInRekenapp = currentPath.includes('/rekenapp/') || currentPath.endsWith('/rekenapp') || currentPath.endsWith('/rekenapp/');
-
-    return alreadyInRekenapp ? pageName : `rekenapp/${pageName}`;
-}
-
 function getNavBar() {
     const navBar = document.createElement('nav');
-    navBar.className = 'navbar navbar-expand-lg bg-body-tertiary';
+    navBar.className = 'navbar navbar-expand-lg navbar-light bg-light';
     navBar.innerHTML = `
         <div class="container-fluid">
             <a class="navbar-brand" href="/index.html">Tafel App</a>
@@ -27,10 +20,13 @@ function getNavBar() {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="${getAppPagePath('tafelapp.html')}">Tafel Zicht</a>
+                        <a class="nav-link" href="/rekenapp/tafelapp.html">Tafel Zicht</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${getAppPagePath('tafeloefen.html')}">Tafel Trainer</a>
+                        <a class="nav-link" href="/rekenapp/tafeloefen.html">Tafel Trainer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rekenapp2/omreken.html">Omrekenen</a>
                     </li>
                 </ul>
             </div>
